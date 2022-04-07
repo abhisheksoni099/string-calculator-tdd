@@ -18,6 +18,11 @@ public class DefaultCalculator implements Calculator {
         if (input == null) {
             throw new RuntimeException(MESSAGE_INVALID_INPUT_NULL);
         }
+        for (int index = 0; index < input.length() - 1; index++) {
+            if (input.charAt(index) == ',' && input.charAt(index + 1) == '\n') {
+                throw new RuntimeException(MESSAGE_INVALID_INPUT_DELIMITER);
+            }
+        }
     }
 
     private int addNumbers(String input) {
@@ -30,9 +35,13 @@ public class DefaultCalculator implements Calculator {
 
     private List<Integer> parseInputData(String input) {
         List<Integer> numbers = new ArrayList<>();
-        StringTokenizer stringTokenizer = new StringTokenizer(input, ",");
-        while (stringTokenizer.hasMoreTokens()) {
-            numbers.add(Integer.parseInt(stringTokenizer.nextToken()));
+        StringTokenizer stringTokenizerOuter = new StringTokenizer(input, ",");
+        while (stringTokenizerOuter.hasMoreTokens()) {
+            String inputSection = stringTokenizerOuter.nextToken();
+            StringTokenizer stringTokenizerInner = new StringTokenizer(inputSection, "\n");
+            while (stringTokenizerInner.hasMoreTokens()) {
+                numbers.add(Integer.parseInt(stringTokenizerInner.nextToken()));
+            }
         }
         return numbers;
     }
