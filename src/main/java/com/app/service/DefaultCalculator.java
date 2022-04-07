@@ -10,11 +10,11 @@ import static com.app.util.StringLiterals.*;
 
 public class DefaultCalculator implements Calculator {
     public int add(String input) {
-        validateInput(input);
+        validateUserInput(input);
         return addNumbers(input);
     }
 
-    private void validateInput(String input) {
+    private void validateUserInput(String input) {
         if (input == null) {
             throw new RuntimeException(MESSAGE_INVALID_INPUT_NULL);
         }
@@ -28,7 +28,7 @@ public class DefaultCalculator implements Calculator {
     }
 
     private String determineEffectiveInput(String input) {
-        if (input.startsWith("//")) {
+        if (input.startsWith(CUSTOM_DELIMITER_IDENTIFIER)) {
             input = input.substring(4);
         }
         return input;
@@ -38,8 +38,9 @@ public class DefaultCalculator implements Calculator {
         if (input.isEmpty()) {
             return 0;
         }
-        List<Integer> numberInput = parseInputData(input);
-        return calculateSum(numberInput);
+        List<Integer> numbers = parseInputData(input);
+        validateInputNumbers(numbers);
+        return calculateSum(numbers);
     }
 
     private List<Integer> parseInputData(String input) {
@@ -49,7 +50,7 @@ public class DefaultCalculator implements Calculator {
         StringTokenizer stringTokenizerOuter = new StringTokenizer(input, delimiter);
         while (stringTokenizerOuter.hasMoreTokens()) {
             String inputSection = stringTokenizerOuter.nextToken();
-            StringTokenizer stringTokenizerInner = new StringTokenizer(inputSection, "\n");
+            StringTokenizer stringTokenizerInner = new StringTokenizer(inputSection, DELIMITER_NEXT_LINE);
             while (stringTokenizerInner.hasMoreTokens()) {
                 numbers.add(Integer.parseInt(stringTokenizerInner.nextToken()));
             }
@@ -57,9 +58,21 @@ public class DefaultCalculator implements Calculator {
         return numbers;
     }
 
+    private void validateInputNumbers(List<Integer> numbers) {
+        List<Integer> negativeNumbers = new ArrayList<>();
+        for (Integer number : numbers) {
+            if (number < 0) {
+                negativeNumbers.add(number);
+            }
+        }
+        if (negativeNumbers.size() > 0) {
+            throw new RuntimeException(String.format("%s: %s", MESSAGE_INVALID_INPUT_NEGATIVE_NUMBER, negativeNumbers));
+        }
+    }
+
     private char determineDelimiter(String input) {
         char delimiter;
-        if (input.startsWith("//")) {
+        if (input.startsWith(CUSTOM_DELIMITER_IDENTIFIER)) {
             delimiter = input.charAt(2);
         } else {
             delimiter = ',';
@@ -80,7 +93,7 @@ public class DefaultCalculator implements Calculator {
     }
 
     private NumberInput parseInputDataForTwoNumbers(String input) {
-        StringTokenizer stringTokenizer = new StringTokenizer(input, ",");
+        StringTokenizer stringTokenizer = new StringTokenizer(input, DEFAULT_DELIMITER);
         NumberInput numberInput = new NumberInput();
         if (stringTokenizer.hasMoreTokens()) {
             numberInput.setNumber1(Integer.parseInt(stringTokenizer.nextToken()));

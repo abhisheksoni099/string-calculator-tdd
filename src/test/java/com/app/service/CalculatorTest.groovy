@@ -35,7 +35,6 @@ class CalculatorTest extends GroovyTestCase {
     void testAddMoreThanTwoNumbers() {
         assertEquals(7, calculator.add("1,2,4"))
         assertEquals(16, calculator.add("1,2,4,1,8"))
-        assertEquals(-1, calculator.add("7,-8"))
     }
 
     void testAddHandleNextLineDelimiter() {
@@ -61,6 +60,18 @@ class CalculatorTest extends GroovyTestCase {
         }
         shouldFail {
             assertEquals(3, calculator.add("1;2"))
+        }
+    }
+
+    void testAddHandleNegativeNumbers() {
+        shouldFail(RuntimeException) {
+            assertEquals(-1, calculator.add("7,-8"))
+        }
+        shouldFail(RuntimeException) {
+            assertEquals(-1, calculator.add("//&\n7&-8"))
+        }
+        shouldFail(RuntimeException) {
+            assertEquals(5, calculator.add("//&\n7&-1&-1"))
         }
     }
 }
