@@ -1,7 +1,5 @@
 package com.app.service;
 
-import com.app.dto.NumberInput;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -110,24 +108,5 @@ public class DefaultCalculator implements Calculator {
             sum += number;
         }
         return sum;
-    }
-
-    private int calculateSum(NumberInput numberInput) {
-        return numberInput.getNumber1() + numberInput.getNumber2();
-    }
-
-    private NumberInput parseInputDataForTwoNumbers(String input) {
-        StringTokenizer stringTokenizer = new StringTokenizer(input, DEFAULT_DELIMITER);
-        NumberInput numberInput = new NumberInput();
-        if (stringTokenizer.hasMoreTokens()) {
-            numberInput.setNumber1(Integer.parseInt(stringTokenizer.nextToken()));
-        }
-        if (stringTokenizer.hasMoreTokens()) {
-            numberInput.setNumber2(Integer.parseInt(stringTokenizer.nextToken()));
-        }
-        if (stringTokenizer.hasMoreTokens()) {
-            throw new RuntimeException(MESSAGE_INVALID_INPUT_NUMBER_LIMIT_EXCEEDED);
-        }
-        return numberInput;
     }
 }
