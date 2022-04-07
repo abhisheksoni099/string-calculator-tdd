@@ -29,4 +29,10 @@ class CalculatorTest extends GroovyTestCase {
     void testAddHandleTwoNumbers() {
         assertEquals(3, calculator.add("2,1"));
     }
+
+    void testAddMoreThanTwoNumbers() {
+        assertEquals(7, calculator.add("1,2,4"))
+        assertEquals(16, calculator.add("1,2,4,1,8"))
+        assertEquals(-1, calculator.add("7,-8"))
+    }
 }
