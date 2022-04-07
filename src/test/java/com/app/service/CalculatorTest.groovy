@@ -50,4 +50,17 @@ class CalculatorTest extends GroovyTestCase {
             assertEquals(3, calculator.add("1,\n2,\n"))
         }
     }
+
+    void testAddHandleCustomDelimiter() {
+        assertEquals(3, calculator.add("1,2"))
+        assertEquals(3, calculator.add("//;\n1;2"))
+        assertEquals(13, calculator.add("//&\n1&2&10"))
+        assertEquals(13, calculator.add("//&\n1\n2&10"))
+        shouldFail (RuntimeException) {
+            assertEquals(13, calculator.add("//&\n1&\n2&10"))
+        }
+        shouldFail {
+            assertEquals(3, calculator.add("1;2"))
+        }
+    }
 }

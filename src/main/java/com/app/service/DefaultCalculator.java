@@ -18,11 +18,20 @@ public class DefaultCalculator implements Calculator {
         if (input == null) {
             throw new RuntimeException(MESSAGE_INVALID_INPUT_NULL);
         }
+        char delimiter = determineDelimiter(input);
+        input = determineEffectiveInput(input);
         for (int index = 0; index < input.length() - 1; index++) {
-            if (input.charAt(index) == ',' && input.charAt(index + 1) == '\n') {
+            if (input.charAt(index) == delimiter && input.charAt(index + 1) == '\n') {
                 throw new RuntimeException(MESSAGE_INVALID_INPUT_DELIMITER);
             }
         }
+    }
+
+    private String determineEffectiveInput(String input) {
+        if (input.startsWith("//")) {
+            input = input.substring(4);
+        }
+        return input;
     }
 
     private int addNumbers(String input) {
@@ -34,8 +43,10 @@ public class DefaultCalculator implements Calculator {
     }
 
     private List<Integer> parseInputData(String input) {
+        String delimiter = String.valueOf(determineDelimiter(input));
+        input = determineEffectiveInput(input);
         List<Integer> numbers = new ArrayList<>();
-        StringTokenizer stringTokenizerOuter = new StringTokenizer(input, ",");
+        StringTokenizer stringTokenizerOuter = new StringTokenizer(input, delimiter);
         while (stringTokenizerOuter.hasMoreTokens()) {
             String inputSection = stringTokenizerOuter.nextToken();
             StringTokenizer stringTokenizerInner = new StringTokenizer(inputSection, "\n");
@@ -44,6 +55,16 @@ public class DefaultCalculator implements Calculator {
             }
         }
         return numbers;
+    }
+
+    private char determineDelimiter(String input) {
+        char delimiter;
+        if (input.startsWith("//")) {
+            delimiter = input.charAt(2);
+        } else {
+            delimiter = ',';
+        }
+        return delimiter;
     }
 
     private int calculateSum(List<Integer> numbers) {
