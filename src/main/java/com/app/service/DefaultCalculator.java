@@ -3,10 +3,11 @@ package com.app.service;
 import com.app.dto.NumberInput;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static com.app.util.StringLiterals.*;
+import static com.app.util.Constants.*;
 
 public class DefaultCalculator implements Calculator {
     public int add(String input) {
@@ -60,9 +61,13 @@ public class DefaultCalculator implements Calculator {
 
     private void validateInputNumbers(List<Integer> numbers) {
         List<Integer> negativeNumbers = new ArrayList<>();
-        for (Integer number : numbers) {
+        Iterator<Integer> iterator = numbers.iterator();
+        while (iterator.hasNext()) {
+            int number = iterator.next();
             if (number < 0) {
                 negativeNumbers.add(number);
+            } else if (number > INPUT_NUMBER_MAX_LIMIT) {
+                iterator.remove();
             }
         }
         if (negativeNumbers.size() > 0) {

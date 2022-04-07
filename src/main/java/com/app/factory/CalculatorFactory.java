@@ -2,7 +2,7 @@ package com.app.factory;
 
 import com.app.service.Calculator;
 import com.app.service.DefaultCalculator;
-import com.app.util.StringLiterals;
+import com.app.util.Constants;
 import com.app.dto.CalculatorType;
 
 public class CalculatorFactory {
@@ -11,6 +11,6 @@ public class CalculatorFactory {
             case DEFAULT:
                 return new DefaultCalculator();
         }
-        throw new RuntimeException(StringLiterals.MESSAGE_UNKNOWN_TYPE);
+        throw new RuntimeException(Constants.MESSAGE_UNKNOWN_TYPE);
     }
 }

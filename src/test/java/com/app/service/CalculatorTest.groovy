@@ -74,4 +74,9 @@ class CalculatorTest extends GroovyTestCase {
             assertEquals(5, calculator.add("//&\n7&-1&-1"))
         }
     }
+
+    void testAddHandleBiggerNumbers() {
+        assertEquals(7, calculator.add("7,1001"))
+        assertEquals(8, calculator.add("7,1001,1,2000"))
+    }
 }
