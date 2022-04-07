@@ -5,7 +5,7 @@ import com.app.dto.CalculatorType
 import static com.app.util.CalculatorUtils.createCalculator
 
 
-class CalculatorTest extends GroovyTestCase {
+class DefaultCalculatorTest extends GroovyTestCase {
     private static Calculator calculator
 
     static {
@@ -78,5 +78,10 @@ class CalculatorTest extends GroovyTestCase {
     void testAddHandleBiggerNumbers() {
         assertEquals(7, calculator.add("7,1001"))
         assertEquals(8, calculator.add("7,1001,1,2000"))
+    }
+
+    void testAddLongerDelimiter() {
+        assertEquals(6, calculator.add("//[***]\n1***2***3"))
+        assertEquals(6, calculator.add("//[----]\n1----2----3"))
     }
 }

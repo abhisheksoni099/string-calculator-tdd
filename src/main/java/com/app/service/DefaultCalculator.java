@@ -19,17 +19,20 @@ public class DefaultCalculator implements Calculator {
         if (input == null) {
             throw new RuntimeException(MESSAGE_INVALID_INPUT_NULL);
         }
-        char delimiter = determineDelimiter(input);
-        input = determineEffectiveInput(input);
+        String delimiter = determineDelimiter(input);
+        input = determineEffectiveInput(input, delimiter);
         for (int index = 0; index < input.length() - 1; index++) {
-            if (input.charAt(index) == delimiter && input.charAt(index + 1) == '\n') {
+            if (delimiter.equals(String.valueOf(input.charAt(index))) && input.charAt(index + 1) == '\n') {
                 throw new RuntimeException(MESSAGE_INVALID_INPUT_DELIMITER);
             }
         }
     }
 
-    private String determineEffectiveInput(String input) {
-        if (input.startsWith(CUSTOM_DELIMITER_IDENTIFIER)) {
+    private String determineEffectiveInput(String input, String delimiter) {
+        if (input.startsWith(String.format("%s%s", CUSTOM_DELIMITER_IDENTIFIER, CUSTOM_DELIMITER_MULTI_LENGTH_START_IDENTIFIER))) {
+            int inputLengthToSkip = 5 + delimiter.length();
+            input = input.substring(inputLengthToSkip);
+        } else if (input.startsWith(CUSTOM_DELIMITER_IDENTIFIER)) {
             input = input.substring(4);
         }
         return input;
@@ -45,8 +48,8 @@ public class DefaultCalculator implements Calculator {
     }
 
     private List<Integer> parseInputData(String input) {
-        String delimiter = String.valueOf(determineDelimiter(input));
-        input = determineEffectiveInput(input);
+        String delimiter = determineDelimiter(input);
+        input = determineEffectiveInput(input, delimiter);
         List<Integer> numbers = new ArrayList<>();
         StringTokenizer stringTokenizerOuter = new StringTokenizer(input, delimiter);
         while (stringTokenizerOuter.hasMoreTokens()) {
@@ -75,14 +78,30 @@ public class DefaultCalculator implements Calculator {
         }
     }
 
-    private char determineDelimiter(String input) {
-        char delimiter;
+    private String determineDelimiter(String input) {
+        String delimiter;
         if (input.startsWith(CUSTOM_DELIMITER_IDENTIFIER)) {
-            delimiter = input.charAt(2);
+            if (input.charAt(2) == CUSTOM_DELIMITER_MULTI_LENGTH_START_IDENTIFIER.charAt(0)) {
+                delimiter = determineMultiLengthDelimiter(input);
+            } else {
+                delimiter = String.valueOf(input.charAt(2));
+            }
         } else {
-            delimiter = ',';
+            delimiter = ",";
         }
         return delimiter;
+    }
+
+    private String determineMultiLengthDelimiter(String input) {
+        StringBuilder delimiter = new StringBuilder();
+        char delimiterCharacter = input.charAt(3);
+        int index = 4;
+        char currentCharacter;
+        do {
+            currentCharacter = input.charAt(index++);
+            delimiter.append(delimiterCharacter);
+        } while (currentCharacter != CUSTOM_DELIMITER_MULTI_LENGTH_END_IDENTIFIER.charAt(0));
+        return delimiter.toString();
     }
 
     private int calculateSum(List<Integer> numbers) {

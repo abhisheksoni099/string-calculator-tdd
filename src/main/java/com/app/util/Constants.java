@@ -8,6 +8,8 @@ public class Constants {
     public static final String MESSAGE_INVALID_INPUT_NEGATIVE_NUMBER = "Negatives not allowed";
     public static final String DEFAULT_DELIMITER = ",";
     public static final String CUSTOM_DELIMITER_IDENTIFIER = "//";
+    public static final String CUSTOM_DELIMITER_MULTI_LENGTH_START_IDENTIFIER = "[";
+    public static final String CUSTOM_DELIMITER_MULTI_LENGTH_END_IDENTIFIER = "]";
     public static final String DELIMITER_NEXT_LINE = "\n";
     public static final int INPUT_NUMBER_MAX_LIMIT = 1000;
 }
